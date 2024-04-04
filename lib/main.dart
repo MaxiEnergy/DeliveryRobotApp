@@ -170,24 +170,46 @@ class _YandexDeliveryRobotDeviceScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FloatingActionButton(
-                  onPressed: () => sendCommand(5), // Влево
-                  child: Icon(Icons.arrow_left),
+                GestureDetector(
+                  onLongPress: () => sendCommand(0x03), // Начать вращение влево
+                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
+                  child: FloatingActionButton(
+                    onPressed:
+                        () {}, // Обработчик нажатия нужен, но не используется
+                    child: Icon(Icons.arrow_left),
+                  ),
                 ),
-                FloatingActionButton(
-                  onPressed: () => sendCommand(1), // Вперед
-                  child: Icon(Icons.arrow_upward),
+                GestureDetector(
+                  onLongPress: () =>
+                      sendCommand(0x03), // Начать вращение вперед
+                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
+                  child: FloatingActionButton(
+                    onPressed:
+                        () {}, // Обработчик нажатия нужен, но не используется
+                    child: Icon(Icons.arrow_upward),
+                  ),
                 ),
-                FloatingActionButton(
-                  onPressed: () => sendCommand(4), // Вправо
-                  child: Icon(Icons.arrow_right),
+                GestureDetector(
+                  onLongPress: () =>
+                      sendCommand(0x03), // Начать вращение вправо
+                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
+                  child: FloatingActionButton(
+                    onPressed:
+                        () {}, // Обработчик нажатия нужен, но не используется
+                    child: Icon(Icons.arrow_right),
+                  ),
                 ),
               ],
             ),
             SizedBox(height: 20),
-            FloatingActionButton(
-              onPressed: () => sendCommand(2), // Назад
-              child: Icon(Icons.arrow_downward),
+            GestureDetector(
+              onLongPress: () => sendCommand(0x03), // Начать вращение назад
+              onLongPressUp: () => sendCommand(0x00), // Остановить вращение
+              child: FloatingActionButton(
+                onPressed:
+                    () {}, // Обработчик нажатия нужен, но не используется
+                child: Icon(Icons.arrow_downward),
+              ),
             ),
             SizedBox(height: 40),
             ElevatedButton(
