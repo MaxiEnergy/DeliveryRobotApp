@@ -157,6 +157,23 @@ class _YandexDeliveryRobotDeviceScreenState
     }
   }
 
+  Widget controlButton(IconData icon, int command) {
+    return Listener(
+      onPointerDown: (_) => sendCommand(command),
+      onPointerUp: (_) =>
+          sendCommand(0), // Предположим, 0 - это команда остановки
+      child: Container(
+        width: 100,
+        height: 100,
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, size: 50),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,47 +187,17 @@ class _YandexDeliveryRobotDeviceScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                GestureDetector(
-                  onLongPress: () => sendCommand(0x03), // Начать вращение влево
-                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
-                  child: FloatingActionButton(
-                    onPressed:
-                        () {}, // Обработчик нажатия нужен, но не используется
-                    child: Icon(Icons.arrow_left),
-                  ),
-                ),
-                GestureDetector(
-                  onLongPress: () =>
-                      sendCommand(0x03), // Начать вращение вперед
-                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
-                  child: FloatingActionButton(
-                    onPressed:
-                        () {}, // Обработчик нажатия нужен, но не используется
-                    child: Icon(Icons.arrow_upward),
-                  ),
-                ),
-                GestureDetector(
-                  onLongPress: () =>
-                      sendCommand(0x03), // Начать вращение вправо
-                  onLongPressUp: () => sendCommand(0x00), // Остановить вращение
-                  child: FloatingActionButton(
-                    onPressed:
-                        () {}, // Обработчик нажатия нужен, но не используется
-                    child: Icon(Icons.arrow_right),
-                  ),
-                ),
+                controlButton(Icons.arrow_left,
+                    0x04), // Предположим, 0x04 - команда влево
+                controlButton(Icons.arrow_upward,
+                    0x01), // Предположим, 0x01 - команда вперед
+                controlButton(Icons.arrow_right,
+                    0x05), // Предположим, 0x05 - команда вправо
               ],
             ),
             SizedBox(height: 20),
-            GestureDetector(
-              onLongPress: () => sendCommand(0x03), // Начать вращение назад
-              onLongPressUp: () => sendCommand(0x00), // Остановить вращение
-              child: FloatingActionButton(
-                onPressed:
-                    () {}, // Обработчик нажатия нужен, но не используется
-                child: Icon(Icons.arrow_downward),
-              ),
-            ),
+            controlButton(Icons.arrow_downward,
+                0x02), // Предположим, 0x02 - команда назад
             SizedBox(height: 40),
             ElevatedButton(
               onPressed: isDeviceConnected ? disconnectDevice : null,
