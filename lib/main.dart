@@ -107,6 +107,7 @@ class YandexDeliveryRobotDeviceScreen extends StatefulWidget {
 class _YandexDeliveryRobotDeviceScreenState
     extends State<YandexDeliveryRobotDeviceScreen> {
   bool isDeviceConnected = false;
+  bool toggleState = true; // Переменная для отслеживания состояния кнопки
 
   @override
   void initState() {
@@ -174,6 +175,15 @@ class _YandexDeliveryRobotDeviceScreenState
     );
   }
 
+  // Метод для переключения состояния и отправки команды
+  void toggleCommand() {
+    int command = toggleState ? 3 : 6;
+    sendCommand(command);
+    setState(() {
+      toggleState = !toggleState; // Переключаем состояние
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,18 +197,19 @@ class _YandexDeliveryRobotDeviceScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                controlButton(Icons.arrow_left,
-                    0x04), // Предположим, 0x04 - команда влево
-                controlButton(Icons.arrow_upward,
-                    0x01), // Предположим, 0x01 - команда вперед
-                controlButton(Icons.arrow_right,
-                    0x05), // Предположим, 0x05 - команда вправо
+                controlButton(Icons.arrow_left, 0x01),
+                controlButton(Icons.arrow_upward, 0x05),
+                controlButton(Icons.arrow_right, 0x02),
               ],
             ),
             SizedBox(height: 20),
-            controlButton(Icons.arrow_downward,
-                0x02), // Предположим, 0x02 - команда назад
+            controlButton(Icons.arrow_downward, 0x04),
             SizedBox(height: 40),
+            ElevatedButton(
+              onPressed: () => toggleCommand(),
+              child: Text(toggleState ? 'Отправить 3' : 'Отправить 6'),
+            ),
+            SizedBox(height: 20),
             ElevatedButton(
               onPressed: isDeviceConnected ? disconnectDevice : null,
               child: Text('Отключиться от устройства'),
