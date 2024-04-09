@@ -12,8 +12,24 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: Color(0xFF0B0C10),
+      theme: ThemeData.light().copyWith(
+        scaffoldBackgroundColor: Colors.grey[100],
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: Colors.white,
+          foregroundColor: Color.fromRGBO(255, 53, 63, 1),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.white, // Background color
+            onPrimary: Color.fromRGBO(255, 53, 63, 1), // Text color
+            shadowColor: Colors.grey, // Shadow color
+            elevation: 4, // Shadow depth
+          ),
+        ),
+        appBarTheme: AppBarTheme(
+          color: Color.fromRGBO(255, 53, 63, 1),
+          foregroundColor: Colors.white, // AppBar text color
+        ),
       ),
       home: FindDevicesScreen(),
     );
@@ -25,7 +41,7 @@ class FindDevicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Поиск устройств'),
+        title: Text('Подключение'),
       ),
       body: RefreshIndicator(
         onRefresh: () =>
@@ -37,37 +53,25 @@ class FindDevicesScreen extends StatelessWidget {
             final devices = snapshot.data!.where(
                 (result) => result.device.name == 'Yandex Delivery Robot');
 
-            return ListView.builder(
-              itemCount: devices.length,
-              itemBuilder: (c, index) {
-                final device = devices.elementAt(index);
-                return ListTile(
-                  title: Center(
-                    child: Container(
-                      width: 364,
-                      height: 156,
-                      decoration: BoxDecoration(
-                        color: Color(0xFF1F2833),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Center(
-                        child: Text(
-                          device.device.name,
-                          style:
-                              TextStyle(color: Color(0xFFC5C6C7), fontSize: 30),
-                        ),
-                      ),
-                    ),
-                  ),
+            if (devices.isEmpty) {
+              return Center(child: CircularProgressIndicator());
+            } else {
+              final device = devices.first;
+              return Center(
+                child: InkWell(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => YandexDeliveryRobotDeviceScreen(
                           device: device.device),
                     ));
                   },
-                );
-              },
-            );
+                  child: Transform.scale(
+                    scale: 0.5,
+                    child: Image.asset('assets/robot.png'),
+                  ),
+                ),
+              );
+            }
           },
         ),
       ),
@@ -79,7 +83,6 @@ class FindDevicesScreen extends StatelessWidget {
             return FloatingActionButton(
               child: Icon(Icons.stop),
               onPressed: () => FlutterBlue.instance.stopScan(),
-              backgroundColor: Color(0xFF45A29E),
             );
           } else {
             return FloatingActionButton(
@@ -147,54 +150,64 @@ class _YandexDeliveryRobotDeviceScreenState
     }
   }
 
-  Widget controlButton(IconData icon, int command) {
-    return Listener(
-      onPointerDown: (_) => sendCommand(command),
-      child: Container(
-        width: 70,
-        height: 70,
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, size: 40),
+  Widget controlButton(IconData icon, int command, String tooltip) {
+    return FloatingActionButton(
+      onPressed: () => sendCommand(command),
+      tooltip: tooltip,
+      child: Icon(icon, color: Color.fromRGBO(255, 53, 63, 1)),
+      backgroundColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: BorderSide(color: Color.fromRGBO(255, 53, 63, 1)),
       ),
     );
-  }
-
-  void toggleCommand() {
-    int command = toggleState ? 3 : 6;
-    sendCommand(command);
-    setState(() {
-      toggleState = !toggleState;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Управление Yandex Delivery Robot'),
+        title: Text('Yandex Delivery Robot'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: <Widget>[
-          Spacer(flex: 2),
-          ElevatedButton(
-            onPressed: () => toggleCommand(),
-            child: Text(toggleState ? 'Включить фары' : 'Выключить фары'),
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 40,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  toggleState = !toggleState;
+                  sendCommand(toggleState ? 3 : 6);
+                });
+              },
+              child: Icon(
+                toggleState ? Icons.lightbulb_outline : Icons.lightbulb,
+                color: Color.fromRGBO(255, 53, 63, 1),
+              ),
+              backgroundColor: Colors.white,
+            ),
           ),
-          Spacer(flex: 3),
-          controlButton(Icons.arrow_upward, 0x05), // Вперед
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              controlButton(Icons.arrow_left, 0x01), // Влево
-              controlButton(Icons.arrow_right, 0x02), // Вправо
-            ],
+          Positioned(
+            bottom: 160,
+            left: 80,
+            child: controlButton(Icons.arrow_back, 0x01, "Left"),
           ),
-          controlButton(Icons.arrow_downward, 0x04), // Назад
-          Spacer(flex: 2),
+          Positioned(
+            bottom: 160,
+            right: 80,
+            child: controlButton(Icons.arrow_forward, 0x02, "Right"),
+          ),
+          Positioned(
+            bottom: 240,
+            left: MediaQuery.of(context).size.width / 2 - 28,
+            child: controlButton(Icons.arrow_upward, 0x05, "Up"),
+          ),
+          Positioned(
+            bottom: 80,
+            left: MediaQuery.of(context).size.width / 2 - 28,
+            child: controlButton(Icons.arrow_downward, 0x04, "Down"),
+          ),
         ],
       ),
     );
