@@ -13,22 +13,22 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: Colors.grey[100],
+        scaffoldBackgroundColor: const Color.fromARGB(255, 255, 255, 255),
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: Colors.white,
           foregroundColor: Color.fromRGBO(255, 53, 63, 1),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: Colors.white, // Background color
-            onPrimary: Color.fromRGBO(255, 53, 63, 1), // Text color
-            shadowColor: Colors.grey, // Shadow color
-            elevation: 4, // Shadow depth
+            primary: Colors.white,
+            onPrimary: Color.fromRGBO(255, 53, 63, 1),
+            shadowColor: Colors.grey,
+            elevation: 4,
           ),
         ),
         appBarTheme: AppBarTheme(
           color: Color.fromRGBO(255, 53, 63, 1),
-          foregroundColor: Colors.white, // AppBar text color
+          foregroundColor: Colors.white,
         ),
       ),
       home: FindDevicesScreen(),
@@ -111,6 +111,8 @@ class _YandexDeliveryRobotDeviceScreenState
     extends State<YandexDeliveryRobotDeviceScreen> {
   bool isDeviceConnected = false;
   bool toggleState = true;
+  String currentImage =
+      'assets/Вперед.png'; // Добавили переменную для хранения текущего изображения
 
   @override
   void initState() {
@@ -145,6 +147,26 @@ class _YandexDeliveryRobotDeviceScreenState
               characteristic.uuid ==
               Guid('00002A60-0000-1000-8000-00805f9b34fb'));
       await targetCharacteristic.write(value);
+
+      // Обновляем текущее изображение в зависимости от команды
+      setState(() {
+        switch (command) {
+          case 0x01: // Left
+            currentImage = 'assets/Влево.png';
+            break;
+          case 0x02: // Right
+            currentImage = 'assets/Вправо.png';
+            break;
+          case 0x05: // Up
+            currentImage = 'assets/Вперед.png';
+            break;
+          case 0x04: // Down
+            currentImage = 'assets/Назад.png';
+            break;
+          default:
+            break;
+        }
+      });
     } catch (e) {
       print("Error sending command: $e");
     }
@@ -171,6 +193,14 @@ class _YandexDeliveryRobotDeviceScreenState
       ),
       body: Stack(
         children: [
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  bottom:
+                      300.0), // Отступ, чтобы изображение было чуть выше центра
+              child: Image.asset(currentImage), // Выводим текущее изображение
+            ),
+          ),
           Positioned(
             bottom: 40,
             right: 20,
