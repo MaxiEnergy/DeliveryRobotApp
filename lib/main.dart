@@ -111,8 +111,7 @@ class _YandexDeliveryRobotDeviceScreenState
     extends State<YandexDeliveryRobotDeviceScreen> {
   bool isDeviceConnected = false;
   bool toggleState = true;
-  String currentImage =
-      'assets/Вперед.png'; // Добавили переменную для хранения текущего изображения
+  String currentImage = 'assets/Вперед.png';
 
   @override
   void initState() {
@@ -148,19 +147,18 @@ class _YandexDeliveryRobotDeviceScreenState
               Guid('00002A60-0000-1000-8000-00805f9b34fb'));
       await targetCharacteristic.write(value);
 
-      // Обновляем текущее изображение в зависимости от команды
       setState(() {
         switch (command) {
-          case 0x01: // Left
+          case 0x01:
             currentImage = 'assets/Влево.png';
             break;
-          case 0x02: // Right
+          case 0x02:
             currentImage = 'assets/Вправо.png';
             break;
-          case 0x05: // Up
+          case 0x05:
             currentImage = 'assets/Вперед.png';
             break;
-          case 0x04: // Down
+          case 0x04:
             currentImage = 'assets/Назад.png';
             break;
           default:
@@ -173,14 +171,18 @@ class _YandexDeliveryRobotDeviceScreenState
   }
 
   Widget controlButton(IconData icon, int command, String tooltip) {
-    return FloatingActionButton(
-      onPressed: () => sendCommand(command),
-      tooltip: tooltip,
-      child: Icon(icon, color: Color.fromRGBO(255, 53, 63, 1)),
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18),
-        side: BorderSide(color: Color.fromRGBO(255, 53, 63, 1)),
+    return Listener(
+      onPointerDown: (_) => sendCommand(command),
+      onPointerUp: (_) => sendCommand(0),
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+            border:
+                Border.all(color: Color.fromRGBO(255, 53, 63, 1), width: 4)),
+        child: Icon(icon, color: Color.fromRGBO(255, 53, 63, 1), size: 28),
       ),
     );
   }
@@ -195,10 +197,8 @@ class _YandexDeliveryRobotDeviceScreenState
         children: [
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(
-                  bottom:
-                      300.0), // Отступ, чтобы изображение было чуть выше центра
-              child: Image.asset(currentImage), // Выводим текущее изображение
+              padding: const EdgeInsets.only(bottom: 300.0),
+              child: Image.asset(currentImage),
             ),
           ),
           Positioned(
