@@ -1,16 +1,26 @@
-# yandex_delivery_robot
 
-A new Flutter project.
+<img width="1354" alt="Снимок экрана 2024-02-06 в 22 55 27" src="https://github.com/MaxiEnergy/SmartConnect/assets/58640177/f85fc0ca-a597-4f01-8336-31c180d56fa5">
 
-## Getting Started
+# DeliveryRobotApp
+В этом репозитории содержится код мобильного приложения на iOS для управления модернизированным игрушечным роботом-курьером от Яндекса. Код прошивки робота-курьера находится в репозитории DeliveryRobotFirmware
 
-This project is a starting point for a Flutter application.
+## Содержание
+- [Стек](#cтек)
+- [Описание функционала](#описание-функционала)
+- [Демонстрация работы приложения с роботом-курьером](#демонстрация-работы-приложения-с-роботом-курьером)
+- [Дополнительные материалы](#дополнительные-материалы)
 
-A few resources to get you started if this is your first Flutter project:
+## Стек
+- Язык программирования Dart
+- Фреймворк Flutter
+- flutter_blue: ^0.8.0
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Описание функционала
+- Взаимодействие с модернизированным игрушечным роботом-курьером от Яндекса посредством технологии BLE
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Демонстрация работы приложения с роботом-курьером
+https://github.com/MaxiEnergy/SmartConnect/assets/58640177/0db40715-8ed3-4a59-a381-7cbcec01cd95
+
+## Дополнительные материалы
+Читайте про создание данного приложения в [статье](https://habr.com/ru/articles/792684/) на Хабре
+
