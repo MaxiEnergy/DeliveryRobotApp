@@ -231,12 +231,12 @@ class _YandexDeliveryRobotDeviceScreenState
           Positioned(
             bottom: 240,
             left: MediaQuery.of(context).size.width / 2 - 28,
-            child: controlButton(Icons.arrow_upward, 0x05, "Up"),
+            child: controlButton(Icons.arrow_upward, 0x04, "Forward"),
           ),
           Positioned(
             bottom: 80,
             left: MediaQuery.of(context).size.width / 2 - 28,
-            child: controlButton(Icons.arrow_downward, 0x04, "Down"),
+            child: controlButton(Icons.arrow_downward, 0x05, "Backward"),
           ),
         ],
       ),
