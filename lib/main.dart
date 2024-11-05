@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_blue/flutter_blue.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -48,17 +47,40 @@ class _FindDevicesScreenState extends State<FindDevicesScreen> {
   void initState() {
     super.initState();
     requestPermissions();
-    startDeviceScan();
   }
 
   Future<void> requestPermissions() async {
-    await Permission.bluetoothScan.request();
-    await Permission.bluetoothConnect.request();
-    await Permission.bluetooth.request();
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.bluetoothScan,
+      Permission.bluetoothConnect,
+      Permission.location
+    ].request();
+
+    if (statuses.values.every((status) => status.isGranted)) {
+      checkBluetoothStatusAndStartScan();
+    } else {
+      print("Необходимо предоставить разрешения для работы с Bluetooth");
+    }
+  }
+
+  void checkBluetoothStatusAndStartScan() async {
+    var isAvailable = await FlutterBlue.instance.isAvailable;
+    var isOn = await FlutterBlue.instance.isOn;
+
+    if (isAvailable && isOn) {
+      startDeviceScan();
+    } else {
+      print("Пожалуйста, включите Bluetooth");
+    }
   }
 
   void startDeviceScan() {
     FlutterBlue.instance.startScan(timeout: Duration(seconds: 4));
+    FlutterBlue.instance.scanResults.listen((results) {
+      results.forEach((result) {
+        print("Found device: ${result.device.name}");
+      });
+    });
   }
 
   @override
@@ -152,7 +174,7 @@ class _FindDevicesScreenState extends State<FindDevicesScreen> {
             return FloatingActionButton(
               child: Icon(Icons.search),
               onPressed: () {
-                FlutterBlue.instance.startScan(timeout: Duration(seconds: 4));
+                checkBluetoothStatusAndStartScan();
               },
             );
           }
